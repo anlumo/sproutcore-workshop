@@ -10,7 +10,7 @@
 
   @extends SC.View
 */
-Chat.ChatView = SC.View.extend({
+Chat.ChatView = SC.View.design({
 	childViews: "chatList nickname enterText".w(),
 	
 	chatList: SC.ScrollView.design({

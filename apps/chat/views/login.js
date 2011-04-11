@@ -10,7 +10,7 @@
 
   @extends SC.View
 */
-Chat.LoginView = SC.View.extend({
+Chat.LoginView = SC.View.design({
 	childViews: "infoLabel".w(),
 	
 	infoLabel: SC.LabelView.design({

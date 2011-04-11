@@ -10,26 +10,39 @@
 
   @extends SC.Object
 */
-Chat.mainController = SC.Object.create(SC.StatechartManger, {
+Chat.mainController = SC.Object.extend(SC.StatechartManager, {
 	nickname: "Guest",
 	
 	rootState: SC.State.design({
-		initialSubstate: "login",
+		initialSubstate: "offline",
 		
 		offline: SC.State.design({
 			enterState: function() {
-		    	Chat.mainView.set('newShowing', Chat.LoginView);
+		    	Chat.mainPage.get('mainView').set('newShowing', Chat.LoginView);
+		    	
+		    	Chat.net.get('dataSource').connect(Chat.net, "silversurfer.local");
+		    	
+		    	Chat.addObserver('myself', this, 'connected');
+			},
+			
+			exitState: function() {
+		    	Chat.removeObserver('myself', this, 'connected');
+			},
+			
+			connected: function() {
+				this.gotoState('online');
 			}
 		}),
 		
 		online: SC.State.design({
 			enterState: function() {
+				console.log("we're online!");
 			}
 		}),
 		
 		chatting: SC.State.design({
 			enterState: function() {
-				Chat.mainView.set('newShowing', Chat.ChatView);
+				Chat.mainPage.get('mainView').set('newShowing', Chat.ChatView);
 			}
 		})
 	})

@@ -18,6 +18,6 @@ Chat.mainPage = SC.Page.design({
 
   }),
   
-  mainView: SC.Outlet('mainPane.mainView')
+  mainView: SC.outlet('mainPane.mainView')
 
 });
