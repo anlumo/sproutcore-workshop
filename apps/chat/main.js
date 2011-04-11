@@ -19,6 +19,8 @@ Chat.main = function main() {
 	// create multiple pages and panes.	 
 	Chat.getPath('mainPage.mainPane').append();
 	
+	// we have to do some query on the store to get it to instantiate in time
+	// otherwise, we can't connect
 	var query = SC.Query.local(Chat.User);
 	Chat.net.find(query);
 	
