@@ -22,5 +22,9 @@ Chat.ChatView = SC.View.extend({
 	nickname: SC.LabelView.design({
 		layout: { left: 0, width: 100, bottom: 0, height: 26 },
 		valueBinding: "Chat.mainController.nickname"
+	}),
+	
+	enterText: SC.TextFieldView.design({
+		layout: { left: 110, right: 10, bottom: 0, height: 26 },
 	})
 });
