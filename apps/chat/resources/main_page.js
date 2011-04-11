@@ -16,6 +16,8 @@ Chat.mainPage = SC.Page.design({
     mainView: SC.ContainerView.design({
 	})
 
-  })
+  }),
+  
+  mainView: SC.Outlet('mainPane.mainView')
 
 });
