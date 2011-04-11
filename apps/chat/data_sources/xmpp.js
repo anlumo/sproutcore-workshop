@@ -18,7 +18,7 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 	connect: function(store, hostname) {
 		this.set('store', store);
 		
-		var conn = new Strophe.Connection("/http-bind");
+		var conn = new Strophe.Connection("/http-bind/");
 		
 		conn.xmlInput = function(body) {
 			console.log(body);

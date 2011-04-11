@@ -8,5 +8,7 @@
 # the SproutCore framework.
 config :all, :required => [:sproutcore, "sproutcore/statechart", :strophe]
 
+proxy '/http-bind', :to => '10.0.1.3:7070'
+
 # In addition to this Buildfile, which gives settings for your entire project,
 # each of your apps has its own Buildfile with settings specific to that app.
