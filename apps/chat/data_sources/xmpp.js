@@ -14,6 +14,7 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 
 	store: null,
 	connection: null,
+	_ownNicks: null,
 
 	connect: function(store, hostname) {
 		this.set('store', store);
@@ -28,6 +29,8 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 		};
 		
 		this.set('connection', conn);
+		
+		this._ownNicks = {};
 		
 		var that = this;
 		conn.connect(hostname, null, function(status) {
@@ -54,8 +57,9 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 	},
 	
 	joinMUC: function(room, nick) {
+		this._ownNicks[room] = nick;
 		this.get('connection').send($pres({
-			to: "%@/%@".fmt(room, nick)
+			to: "%@/%@".fmt(room, nick),
 		}).c('x', {xmlns: "http://jabber.org/protocol/muc"}));
 	},
 	
@@ -67,10 +71,18 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 		if(_.find('x[xmlns=http://jabber.org/protocol/muc#user]').length > 0) {
 			// we only handle MUC presence
 			
-			var item = _.find('x[xmlns=http://jabber.org/protocol/muc#user] > item');
-			var status = _.find('x[xmlns=http://jabber.org/protocol/muc#user] > status');
-			var myself = status.find('.[code=110]').length > 0;
+			var x = _.find('x[xmlns=http://jabber.org/protocol/muc#user]');
+			var item = x.find('item');
+			var myself = x.find('status[code=110]').length > 0;
+			var awaitingConfiguration = x.find('status[code=201]').length > 0;
+			var room = Strophe.getBareJidFromJid(from);
 			
+			if(!myself) {
+				// some servers don't send status 110 :(
+				myself = Strophe.getResourceFromJid(from) === this._ownNicks[room];
+			}
+			
+			console.log("myself = " + (myself?"YES":"NO"));
 			// add/update user
 			this.get('store').pushRetrieve(Chat.User, from, {
 				jid: from,
@@ -80,13 +92,19 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 				myself: myself
 			});
 			
-			var room = Strophe.getBareJidFromJid(from);
-			
 			// add/update room
 			this.get('store').pushRetrieve(Chat.Room, room, {
 				jid: room
 			});
 			SC.RunLoop.begin().end(); // commit store changes
+			
+			if(awaitingConfiguration) {
+				// just accept the defaults
+				this.get('connection').send(
+					$iq({type: 'set', to: room})
+						.c('query', {xmlns: "http://jabber.org/protocol/muc#owner"})
+							.c('x', {xmlns: "jabber:x:data", type: "submit"}));
+			}
 		}
 	
 		return true;
