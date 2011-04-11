@@ -36,7 +36,17 @@ Chat.mainController = SC.Object.extend(SC.StatechartManager, {
 		
 		online: SC.State.design({
 			enterState: function() {
-				console.log("we're online!");
+				var dialog = Chat.createJoinChatDialog();
+				dialog.get('okButton').set('action', function() {
+					var textField = dialog.get('nickNameField');
+					textField.commitEditing();
+					var nick = textField.get('fieldValue');
+					Chat.net.get('dataSource').joinMUC("workshop@conference.ledwatch.local", nick);
+					dialog.remove();
+				});
+				
+				dialog.append();
+				dialog.get('nickNameField').becomeFirstResponder();
 			}
 		}),
 		

@@ -28,6 +28,7 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 		};
 		
 		this.set('connection', conn);
+		
 		var that = this;
 		conn.connect(hostname, null, function(status) {
 			if(status === Strophe.Status.CONNECTED) {
@@ -40,19 +41,55 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 	
 	connected: function() {
 		var connection = this.get('connection');
-		this.get('store').pushRetrieve(Chat.User, connection.jid, {
-			jid: connection.jid,
-			name: "us"
-		});
-		SC.RunLoop.begin().end(); // commit in store
-		
-		Chat.set('myself', this.get('store').find(Chat.User, connection.jid));
-		
+		var that = this;
+		connection.addHandler(function(presence) {
+			that.on_presence_changed(presence);
+		}, null, "presence");
 		connection.send($pres());
+		Chat.set('myself', connection.jid);
 	},
 	
 	disconnected: function() {
 		Chat.set('myself', null);
+	},
+	
+	joinMUC: function(room, nick) {
+		this.get('connection').send($pres({
+			to: "%@/%@".fmt(room, nick)
+		}).c('x', {xmlns: "http://jabber.org/protocol/muc"}));
+	},
+	
+	on_presence_changed: function(presence) {
+		var _ = SC.$(presence);
+		var ptype = _.attr('type');
+		var from = _.attr('from');
+		
+		if(_.find('x[xmlns=http://jabber.org/protocol/muc#user]').length > 0) {
+			// we only handle MUC presence
+			
+			var item = _.find('x[xmlns=http://jabber.org/protocol/muc#user] > item');
+			var status = _.find('x[xmlns=http://jabber.org/protocol/muc#user] > status');
+			var myself = status.find('.[code=110]').length > 0;
+			
+			// add/update user
+			this.get('store').pushRetrieve(Chat.User, from, {
+				jid: from,
+				role: item.attr('role'),
+				affiliation: item.attr('affiliation'),
+				available: ptype !== "unavailable",
+				myself: myself
+			});
+			
+			var room = Strophe.getBareJidFromJid(from);
+			
+			// add/update room
+			this.get('store').pushRetrieve(Chat.Room, room, {
+				jid: room
+			});
+			SC.RunLoop.begin().end(); // commit store changes
+		}
+	
+		return true;
 	},
 	
 	// ..........................................................
