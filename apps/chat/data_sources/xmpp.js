@@ -47,10 +47,10 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 		var connection = this.get('connection');
 		var that = this;
 		connection.addHandler(function(presence) {
-			that.on_presence_changed(presence);
+			return that.on_presence_changed(presence);
 		}, null, "presence");
 		connection.addHandler(function(message) {
-			that.on_muc_message(message);
+			return that.on_muc_message(message);
 		}, null, "message", "groupchat");
 		
 		connection.send($pres());
@@ -87,7 +87,6 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 				myself = Strophe.getResourceFromJid(from) === this._ownNicks[room];
 			}
 			
-			console.log("myself = " + (myself?"YES":"NO"));
 			// add/update user
 			this.get('store').pushRetrieve(Chat.User, from, {
 				jid: from,
