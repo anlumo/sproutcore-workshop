@@ -20,7 +20,7 @@ Chat.mainController = SC.Object.extend(SC.StatechartManager, {
 		
 		offline: SC.State.design({
 			enterState: function() {
-		    	Chat.mainPage.get('mainView').set('newShowing', Chat.LoginView);
+		    	Chat.mainPage.get('mainView').set('nowShowing', Chat.LoginView);
 		    	
 		    	Chat.net.get('dataSource').connect(Chat.net, this.get('statechart').server);
 		    	
@@ -73,7 +73,10 @@ Chat.mainController = SC.Object.extend(SC.StatechartManager, {
 		
 		chatting: SC.State.design({
 			enterState: function() {
-				Chat.mainPage.get('mainView').set('newShowing', Chat.ChatView);
+				Chat.mainPage.get('mainView').set('nowShowing', Chat.ChatView);
+				
+				Chat.chatlinesController.bind('room', SC.Binding.from('Chat.mainController.room'));
+				Chat.usersController.bind('room', SC.Binding.from('Chat.mainController.room'));
 			},
 			
 			exitState: function() {

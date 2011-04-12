@@ -22,5 +22,14 @@ Chat.Room = SC.Record.extend({
 			orderBy: "name"
 		});
 		return Chat.net.find(query);
+	}.property().cacheable(),
+	
+	messages: function() {
+		var query = SC.Query.local(Chat.Message, {
+			conditions: 'room = {room}',
+			room: this.get('jid'),
+			orderBy: "timestamp"
+		});
+		return Chat.net.find(query);
 	}.property().cacheable()
 });

@@ -15,6 +15,7 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 	store: null,
 	connection: null,
 	_ownNicks: null,
+	_messageGuid: 0,
 
 	connect: function(store, hostname) {
 		this.set('store', store);
@@ -48,6 +49,10 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 		connection.addHandler(function(presence) {
 			that.on_presence_changed(presence);
 		}, null, "presence");
+		connection.addHandler(function(message) {
+			that.on_muc_message(message);
+		}, null, "message", "groupchat");
+		
 		connection.send($pres());
 		Chat.set('myself', connection.jid);
 	},
@@ -107,6 +112,40 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 			}
 		}
 	
+		return true;
+	},
+	
+	on_muc_message: function(message) {
+		var _ = SC.$(message);
+		var from = _.attr('from');
+		var room = Strophe.getBareJidFromJid(jid);
+		
+		var storeKey = this.get('store').storeKeyFor(Chat.Room, room);
+		var roomHash = this.get('store').readDataHash(storeKey);
+		if(!roomHash) {
+			// unknown room, ignore message
+			return true;
+		}
+		
+		var body = _.find('body');
+		
+		if(body.length === 0)
+			body = null;
+		else
+			body = body.text();
+		
+		this.get('store').pushRetrieve(Chat.Message, this._messageGuid, {
+			guid: this._messageGuid,
+			fromJid: from,
+			roomJid: room,
+			timestamp: SC.DateTime.create(),
+			body: body
+		});
+		
+		SC.RunLoop.begin().end(); // commit changes to store
+		
+		this._messageGuid++;
+		
 		return true;
 	},
 	
