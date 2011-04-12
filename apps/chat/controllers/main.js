@@ -76,7 +76,21 @@ Chat.mainController = SC.Object.extend(SC.StatechartManager, {
 		chatting: SC.State.design({
 			enterState: function() {
 				Chat.mainPage.get('mainView').set('nowShowing', Chat.ChatView);
+				var chatview = Chat.mainPage.get('mainView').get('contentView');
+				var room = this.get('statechart').get('room');
+				var newLineFun = function(line) {
+					Chat.net.createRecord(Chat.Message, {
+						roomJid: room.get('jid'),
+						body: line
+					});
+				};
 				
+				chatview.get('enterText').set('lineHandler', newLineFun);
+				chatview.get('enterText').set('actionHandler', function(line) {
+					newLineFun("/me " + line);
+				});
+				
+				chatview.becomeFirstResponder();
 				Chat.chatlinesController.bind('room', SC.Binding.from('Chat.mainController.room'));
 				Chat.usersController.bind('room', SC.Binding.from('Chat.mainController.room'));
 			},

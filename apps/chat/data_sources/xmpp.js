@@ -117,7 +117,7 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 	on_muc_message: function(message) {
 		var _ = SC.$(message);
 		var from = _.attr('from');
-		var room = Strophe.getBareJidFromJid(jid);
+		var room = Strophe.getBareJidFromJid(from);
 		
 		var storeKey = this.get('store').storeKeyFor(Chat.Room, room);
 		var roomHash = this.get('store').readDataHash(storeKey);
@@ -172,12 +172,31 @@ Chat.XMPPDataSource = SC.DataSource.extend({
 		return NO ; // return YES if you handled the storeKey
 	},
 	
+	_recordTypeCheck: function(store, storeKey, type) {
+		return SC.kindOf(store.recordTypeFor(storeKey), type);
+	},
+	
 	createRecord: function(store, storeKey) {
+		var recordHash = store.readDataHash(storeKey);
+		if(this._recordTypeCheck(store, storeKey, Chat.Message)) {
+			recordHash.timestamp = SC.DateTime.create();
+			recordHash.guid = this._messageGuid;
+			recordHash.from = null;
+			var to = recordHash.roomJid;
+			
+			this.get('connection').send($msg({
+				to: to,
+				type: 'groupchat'
+			}).c('body').t(recordHash.body));
+			
+			store.dataSourceDidComplete(storeKey, recordHash, this._messageGuid);
+			
+			this._messageGuid++;
+			
+			return YES;
+		}
 		
-		// TODO: Add handlers to submit new records to the data source.
-		// call store.dataSourceDidComplete(storeKey) when done.
-		
-		return NO ; // return YES if you handled the storeKey
+		return NO; // return YES if you handled the storeKey
 	},
 	
 	updateRecord: function(store, storeKey) {

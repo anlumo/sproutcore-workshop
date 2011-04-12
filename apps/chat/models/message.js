@@ -19,10 +19,10 @@ Chat.Message = SC.Record.extend({
 	roomJid: SC.Record.attr(String),
 	
 	from: function() {
-		return Chat.net.find(SC.Query(Chat.User, 'jid = {jid}', {jid: this.get('fromJid')})).objectAt(0);
+		return Chat.net.find(SC.Query.local(Chat.User, 'jid = {jid}', {jid: this.get('fromJid')})).objectAt(0);
 	}.property('fromJid').cacheable(),
 	
 	room: function() {
-		return Chat.net.find(SC.Query(Chat.Room, 'jid = {jid}', {jid: this.get('roomJid')})).objectAt(0);
+		return Chat.net.find(SC.Query.local(Chat.Room, 'jid = {jid}', {jid: this.get('roomJid')})).objectAt(0);
 	}.property('roomJid').cacheable()
 });

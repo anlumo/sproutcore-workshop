@@ -33,6 +33,21 @@ Chat.ChatView = SC.MasterDetailView.design({
 		
 		enterText: SC.TextFieldView.design({
 			layout: { left: 110, right: 10, bottom: 0, height: 26 },
+			keyDown: function(event) {
+				sc_super();
+				
+				if(event.commandCodes().firstObject() === "return") {
+					if(this.get('lineHandler')) {
+						this.get('lineHandler')(this.get('value'));
+					}
+					this.set('value', '');
+				} else if(event.commandCodes().firstObject() === "shift_return") {
+					if(this.get('actionHandler')) {
+						this.get('actionHandler')(this.get('value'));
+					}
+					this.set('value','');
+				}
+			}
 		})
 	}),
 	masterView: SC.ScrollView.design({
@@ -43,5 +58,7 @@ Chat.ChatView = SC.MasterDetailView.design({
 			contentBinding: "Chat.usersController.arrangedObjects",
 			selectionBinding: "Chat.usersController.selection"
 		})
-	})
+	}),
+	
+	enterText: SC.outlet("detailView.enterText")
 });
