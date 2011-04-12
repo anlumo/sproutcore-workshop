@@ -53,6 +53,8 @@ Chat.mainController = SC.Object.extend(SC.StatechartManager, {
 					that.roomArray = Chat.net.find(SC.Query.local(Chat.Room, 'jid = {jid}', { jid: room }));
 					that.roomArray.addObserver('[]', that, 'roomArrayChanged');
 					
+					statechart.set('nickname', nick);
+					
 					Chat.net.get('dataSource').joinMUC(room, nick);
 					dialog.remove();
 				});
