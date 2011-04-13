@@ -11,6 +11,7 @@
   @extends SC.View
 */
 sc_require('views/message.js');
+sc_require('views/chat_list.js');
 
 Chat.ChatView = SC.MasterDetailView.design({
 	detailView: SC.View.design({
@@ -19,7 +20,7 @@ Chat.ChatView = SC.MasterDetailView.design({
 		chatList: SC.ScrollView.design({
 			layout: { left: 0, right: 0, top: 0, bottom: 30 },
 			hasHorizontalScroller: NO,
-			contentView: SC.ListView.design({
+			contentView: Chat.ChatListView.design({
 				exampleView: Chat.MessageView,
 				contentBinding: "Chat.chatlinesController.arrangedObjects",
 				selectionBinding: "Chat.chatlinesController.selection"

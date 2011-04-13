@@ -1,0 +1,80 @@
+.chatMessage {
+	position: absolute;
+	height: 100%;
+	left: 10px;
+	right: 0;
+	padding: 5px 5px 5px 15px;
+	
+	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-size: 14pt;
+	
+	.timestamp:before {
+		content: '[';
+	}
+	.timestamp {
+		font-family: Monaco, "Courier New", Courier;
+		font-size: 8pt;
+		position: absolute;
+		left: 0;
+		width: 60px;
+		top: 0;
+		height: 100%;
+		padding: 10px 0 0 0;
+	}
+	.timestamp:after {
+		content: ']';
+	}
+	.from {
+		position: absolute;
+		left: 70px;
+		width: 120px;
+		top: 0;
+		height: 100%;
+		padding: 4px 0;
+		text-align: right;
+	}
+	&.chat {
+		.body {
+			position: absolute;
+			left: 190px;
+			right: 10px;
+			bottom: 10px;
+			top: 0;
+			padding: 4px 25px;
+		}
+		.body:before {
+			content: '\00bb';
+			color: #900;
+		}
+		.body:after {
+			content: '\00ab';
+			color: #900;
+		}
+		.from:after {
+			content: ':';
+		}
+	}
+	&.action {
+		.body {
+			position: absolute;
+			left: 175px;
+			right: 10px;
+			bottom: 10px;
+			top: 0;
+			padding: 5px 25px;
+		}
+	}
+}
+.chatMessageMeasurement {
+	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-size: 14pt;
+	
+	line-height: 1.4;
+	background-color: white;
+}
+.chatMessageMeasurement:before {
+	content: '\00bb';
+}
+.chatMessageMeasurement:after {
+	content: '\00ab';
+}
