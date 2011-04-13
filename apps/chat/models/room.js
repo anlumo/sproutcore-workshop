@@ -17,7 +17,7 @@ Chat.Room = SC.Record.extend({
 	
 	participants: function() {
 		var query = SC.Query.local(Chat.User, {
-			conditions: 'room = {room}',
+			conditions: '(room = {room}) AND available = true',
 			room: this.get('jid'),
 			orderBy: "name"
 		});
