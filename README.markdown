@@ -29,7 +29,7 @@ The server the application runs on has to respond to the BOSH requests on /http-
     ProxyPass /http-bind/ http://<ip>:<port>/http-bind/
     ProxyPass / http://localhost:4020/
 
-Insert the BOSH-server's IP at <ip> and its corrsponding port at <port>. The sc-server is assumed to run locally.
+Insert the BOSH-server's IP at &lt;ip&gt; and its corrsponding port at &lt;port&gt;. The sc-server is assumed to run locally.
 
 Note that you can also use the built-in proxy support of sc-server, but due to handling only a single connection at a time, it is of very limited use for BOSH. The Buildfile includes the configuration required for that (altough you have to edit the IP-address of the server to proxy to).
 
