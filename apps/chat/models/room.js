@@ -26,7 +26,7 @@ Chat.Room = SC.Record.extend({
 	
 	messages: function() {
 		var query = SC.Query.local(Chat.Message, {
-			conditions: 'room = {room}',
+			conditions: '(roomJid = {room}) AND (from isnotnull)',
 			room: this.get('jid'),
 			orderBy: "timestamp"
 		});

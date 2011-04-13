@@ -12,7 +12,16 @@
 // See comments for some pointers on what to do next.
 //
 Chat.main = function main() {
-
+	SC.Query.registerQueryExtension('isnotnull', {
+		reservedWord: true,
+		leftType: 'PRIMITIVE',
+		evalType: 'BOOLEAN',
+		evaluate: function(r,w) {
+			var left = this.leftSide.evaluate(r,w);
+			return left != null;
+		}
+	});
+	
 	// Step 1: Instantiate Your Views
 	// The default code here will make the mainPane for your application visible
 	// on screen.	 If you app gets any level of complexity, you will probably 
