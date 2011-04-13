@@ -23,7 +23,10 @@ Chat.ChatView = SC.MasterDetailView.design({
 			contentView: Chat.ChatListView.design({
 				exampleView: Chat.MessageView,
 				contentBinding: "Chat.chatlinesController.arrangedObjects",
-				selectionBinding: "Chat.chatlinesController.selection"
+				selectionBinding: "Chat.chatlinesController.selection",
+				mouseDown: function(event) {
+					this.get('parentView').get('parentView').get('parentView').enterText.becomeFirstResponder();
+				}
 			})
 		}),
 		
