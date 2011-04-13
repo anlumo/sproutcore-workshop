@@ -26,8 +26,8 @@ You need an XMPP server. I've tested ejabberd and OpenFire, but others should wo
 
 The server the application runs on has to respond to the BOSH requests on /http-bind/. Most likely, you'll have to implement a proxy for this. If you're using sc-server for development, the possible configuration for apache is as follows:
 
-> ProxyPass /http-bind/ http://<ip>:<port>/http-bind/
-> ProxyPass / http://localhost:4020/
+    ProxyPass /http-bind/ http://<ip>:<port>/http-bind/
+    ProxyPass / http://localhost:4020/
 
 Insert the BOSH-server's IP at <ip> and its corrsponding port at <port>. The sc-server is assumed to run locally.
 
