@@ -1,0 +1,6 @@
+[submodule "frameworks/sproucore"]
+	path = frameworks/sproucore
+	url = https://github.com/sproutcore/sproutcore.git
+[submodule "garcon"]
+	path = garcon
+	url = https://github.com/MSch/garcon.git
