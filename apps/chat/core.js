@@ -22,8 +22,7 @@ Chat = SC.Application.create(
   // to any fixtures you define.
   net: SC.Store.create({
   	commitRecordsAutomatically: YES
-  }).from("Chat.Xmpp")
+  }).from("Chat.Xmpp"),
   
-  // TODO: Add global constants or singleton objects needed by your app here.
-
-}) ;
+  myself: null
+});

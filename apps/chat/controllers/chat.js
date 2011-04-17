@@ -26,12 +26,21 @@ Chat.chatController = SC.Object.create(SC.StatechartManager, {
 			enterState: function() {
 				Chat.mainPage.get('mainView').set('nowShowing', Chat.LoginView);
 				
+				Chat.addObserver('myself', this, 'connected');
 				Chat.net.get('dataSource').connect(Chat.net, this.get('statechart').server);
 			},
 			exitState: function() {
+				Chat.removeObserver('myself', this, 'connected');
+			},
+			
+			connected: function() {
+				this.gotoState('online');
 			}
 		}),
 		online: SC.State.design({
+			enterState: function() {
+				
+			}
 		}),
 		chatting: SC.State.design({
 		})

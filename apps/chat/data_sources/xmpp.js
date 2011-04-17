@@ -38,8 +38,11 @@ Chat.Xmpp = SC.DataSource.extend({
 	},
 	
 	connected: function() {
+		var connection = this.get('connection');
+		Chat.set('myself', connection.jid);
 	},
 	disconnected: function() {
+		Chat.set('myself', null);
 	},
 
   // ..........................................................

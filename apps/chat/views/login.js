@@ -11,7 +11,7 @@
   @extends SC.View
 */
 Chat.LoginView = SC.View.design({
-	childView: "infoLabel".w(),
+	childViews: "infoLabel".w(),
 	
 	infoLabel: SC.LabelView.design({
 		layout: { centerX: 0, centerY: 0, width: 100, height: 26 },
