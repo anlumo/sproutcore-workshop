@@ -1,5 +1,10 @@
 Chat.createJoinChatDialog = function() {
 	return SC.PanelPane.create({
+		init: function() {
+			sc_super();
+			this.get('nickNameField').becomeFirstResponder();
+		},
+	
 		layout: { width: 300, height: 180, centerX: 0, centerY: 0 },
 		contentView: SC.View.design({
 			childViews: "prompt nickName roomPrompt roomName okButton".w(),

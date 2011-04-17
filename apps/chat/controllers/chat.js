@@ -39,7 +39,12 @@ Chat.chatController = SC.Object.create(SC.StatechartManager, {
 		}),
 		online: SC.State.design({
 			enterState: function() {
-				
+				console.log("create join chat dialog");
+				var dialog = Chat.createJoinChatDialog();
+				dialog.get('okButton').set('action', function() {
+					dialog.remove();
+				});
+				dialog.append();
 			}
 		}),
 		chatting: SC.State.design({
