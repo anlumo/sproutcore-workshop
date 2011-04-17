@@ -24,7 +24,12 @@ Chat.main = function main() {
 
   // TODO: Set the content property on your primary controller
   // ex: Chat.contactsController.set('content',Chat.contacts);
+  
+  var query = SC.Query.local(Chat.User);
+  Chat.net.find(query);
+  
+  Chat.chatController.gotoState('offline');
 
-} ;
+};
 
 function main() { Chat.main(); }
